@@ -3,11 +3,20 @@ import NewProject from "./components/NewProject";
 import ProjectsSidebar from "./components/ProjectsSidebar";
 
 function App() {
-  const [projectState, setProjectState] = useState({
-    selectedProjectId: undefined,
+  const [projectsState, setProjectsState] = useState({
+    selectedProjectId: undefined, // neither adding new project nor selecting a project
+    projects: [], // add projects created by the user
   });
 
   //TODO: handle add project click
+  function handleStartAddProject() {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState, // spread the old state
+        selectedProjectId: null, // null: adding a new project
+      };
+    });
+  }
 
   return (
     <>
