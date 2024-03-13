@@ -12,18 +12,25 @@ function App() {
   function handleStartAddProject() {
     setProjectsState((prevState) => {
       return {
-        ...prevState, // spread the old state
+        ...prevState, // spread the old state with the projects created by the user
         selectedProjectId: null, // null: adding a new project
       };
     });
   }
 
+  let content;
+
+  if (projectsState.selectedProjectId === null) {
+    content = <NewProject />;
+  } else if (projectsState.selectedProjectId === undefined) {
+    content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
+  }
+
   return (
     <>
       <main className="h-screen my-8 flex gap-8">
-        <ProjectsSidebar />
-        {/* TODO: conditional new project or selected existing project */}
-        {projectsState === null ? <NewProject /> : <NoProjectSelected />}
+        <ProjectsSidebar onStartAddProject={handleStartAddProject} />
+        {content}
       </main>
     </>
   );
