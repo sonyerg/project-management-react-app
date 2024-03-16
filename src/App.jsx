@@ -52,12 +52,31 @@ function App() {
     });
   }
 
-  //TODO: connect handleSelectProject's id to SelectedProject
+  function handleDeleteProject() {
+    //TODO: delete the selected project
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter(
+          (project) => project.id !== prevState.selectedProjectId
+        ),
+        // true to keep an item, false to remove.
+        // filtering out the selected project, on Delete
+      };
+    });
+  }
+
   const selectedProject = projectsState.projects.find(
     (project) => project.id === projectsState.selectedProjectId
   );
+  // find(), like map(), is a method built into Vanilla JavaScript that takes a function as an argument,
+  // a function that will be executed for every element in the given array (projectState.projects).
+  // And that function then should return true if it founds the element it was looking for.
 
-  let content;
+  let content = (
+    <SelectedProject project={selectedProject} onDelete={handleDeleteProject} />
+  );
 
   if (projectsState.selectedProjectId === null) {
     content = (
@@ -65,8 +84,6 @@ function App() {
     );
   } else if (projectsState.selectedProjectId === undefined) {
     content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
-  } else {
-    content = <SelectedProject project={selectedProject} />;
   }
 
   return (
@@ -76,6 +93,7 @@ function App() {
           onStartAddProject={handleStartAddProject}
           projects={projectsState.projects}
           onSelectProject={handleSelectProject}
+          selectedProjectId={projectsState.selectedProjectId}
         />
         {content}
       </main>
