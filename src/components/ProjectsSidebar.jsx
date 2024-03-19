@@ -1,18 +1,18 @@
+import { useContext } from "react";
 import Button from "./Button";
+import { ProjectContext } from "../store/project-context.jsx";
 
-export default function ProjectsSidebar({
-  onStartAddProject,
-  onSelectProject,
-  projects,
-  selectedProjectId,
-}) {
+export default function ProjectsSidebar() {
+  const { projects, startAddProject, selectProject, selectedProjectId } =
+    useContext(ProjectContext);
+
   return (
     <aside className="w-1/3 px-8 py-16 bg-stone-900 text-stone-50 md:w-72 rounded-r-xl">
       <h2 className="mb-8 font-bold uppercase md:text-xl text-stone-200">
         Your Projects
       </h2>
       <div>
-        <Button onClick={onStartAddProject}>+ Add Project</Button>
+        <Button onClick={startAddProject}>+ Add Project</Button>
       </div>
       <ul className="mt-8">
         {projects.map((project) => {
@@ -28,7 +28,7 @@ export default function ProjectsSidebar({
           return (
             <li key={project.id}>
               <button
-                onClick={() => onSelectProject(project.id)}
+                onClick={() => selectProject(project.id)}
                 className={cssClasses}
               >
                 {project.title}

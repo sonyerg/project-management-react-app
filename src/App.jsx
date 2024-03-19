@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import NewProject from "./components/NewProject";
 import ProjectsSidebar from "./components/ProjectsSidebar";
 import NoProjectSelected from "./components/NoProjectSelected";
 import SelectedProject from "./components/SelectedProject";
+import ProjectContextProvider, {
+  ProjectContext,
+} from "./store/project-context";
 
 function App() {
+  const { selectedProjectId } = useContext(ProjectContext);
   const [projectsState, setProjectsState] = useState({
     selectedProjectId: undefined, // neither adding new project nor selecting a project
     projects: [], // add projects created by the user
@@ -57,7 +61,7 @@ function App() {
   function handleAddProject(projectData) {
     setProjectsState((prevState) => {
       const newProject = {
-        ...projectData, // contains title, description, and duedate
+        ...projectData, // contains title, description, and dueDate
         id: Math.random(),
       };
 
@@ -92,43 +96,35 @@ function App() {
     });
   }
 
-  const selectedProject = projectsState.projects.find(
-    (project) => project.id === projectsState.selectedProjectId
-  );
-  // find(), like map(), is a method built into Vanilla JavaScript that takes a function as an argument,
-  // a function that will be executed for every element in the given array (projectState.projects).
-  // And that function then should return true if it founds the element it was looking for.
+  const ctxValue = {
+    selectedProjectId: projectsState.selectedProjectId,
+    projects: projectsState.projects,
+    tasks: projectsState.tasks,
+    addTask: handleAddTask,
+    deleteTask: handleDeleteTask,
+    addProject: handleAddProject,
+    cancelAddProject: handleCancelAddProject,
+    startAddProject: handleStartAddProject,
+    selectProject: handleSelectProject,
+    deleteProject: handleDeleteProject,
+  };
 
-  let content = (
-    <SelectedProject
-      project={selectedProject}
-      onDelete={handleDeleteProject}
-      onAddTask={handleAddTask}
-      onDeleteTask={handleDeleteTask}
-      tasks={projectsState.tasks}
-    />
-  );
+  let content = <SelectedProject />;
 
   if (projectsState.selectedProjectId === null) {
-    content = (
-      <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject} />
-    );
+    console.log("Rendering NewProject");
+    content = <NewProject />;
   } else if (projectsState.selectedProjectId === undefined) {
-    content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
+    content = <NoProjectSelected />;
   }
 
   return (
-    <>
+    <ProjectContext.Provider value={ctxValue}>
       <main className="h-screen my-8 flex gap-8">
-        <ProjectsSidebar
-          onStartAddProject={handleStartAddProject}
-          projects={projectsState.projects}
-          onSelectProject={handleSelectProject}
-          selectedProjectId={projectsState.selectedProjectId}
-        />
+        <ProjectsSidebar />
         {content}
       </main>
-    </>
+    </ProjectContext.Provider>
   );
 }
 
