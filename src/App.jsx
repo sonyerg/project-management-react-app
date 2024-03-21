@@ -3,12 +3,11 @@ import NewProject from "./components/NewProject";
 import ProjectsSidebar from "./components/ProjectsSidebar";
 import NoProjectSelected from "./components/NoProjectSelected";
 import SelectedProject from "./components/SelectedProject";
-import ProjectContextProvider, {
-  ProjectContext,
-} from "./store/project-context";
+import { ProjectContext } from "./store/project-context";
 
 function App() {
-  const { selectedProjectId } = useContext(ProjectContext);
+  // const { selectedProjectId } = useContext(ProjectContext);
+
   const [projectsState, setProjectsState] = useState({
     selectedProjectId: undefined, // neither adding new project nor selecting a project
     projects: [], // add projects created by the user
@@ -20,13 +19,16 @@ function App() {
       const taskId = Math.random();
       const newTask = {
         text: text,
-        projectId: prevState.selectedProjectId,
+        projectId: prevState.selectedProjectId, // Associate task with the selected project
         id: taskId,
       };
 
+      // Append the new task to the tasks of the selected project only
+      // const updatedTasks = prevState.tasks.concat(newTask);
+
       return {
         ...prevState,
-        tasks: [newTask, ...prevState.tasks],
+        tasks: [...prevState.tasks, newTask],
       };
     });
   }
@@ -112,7 +114,6 @@ function App() {
   let content = <SelectedProject />;
 
   if (projectsState.selectedProjectId === null) {
-    console.log("Rendering NewProject");
     content = <NewProject />;
   } else if (projectsState.selectedProjectId === undefined) {
     content = <NoProjectSelected />;

@@ -13,10 +13,11 @@ export const ProjectContext = createContext({
   deleteProject: () => {},
 });
 
-export default function ProjectContextProvider({ children }) {
-  return (
-    <ProjectContext.Provider value={ctxValue}>
-      {children}
-    </ProjectContext.Provider>
-  );
-}
+// export default function ProjectContextProvider({ children }) {
+
+//   return (
+//     <ProjectContext.Provider value={ctxValue}>
+//       {children}
+//     </ProjectContext.Provider>
+//   );
+// }
